@@ -1,11 +1,30 @@
 package com.sbhandare.pawdopt.DTO;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name="userdetail")
+@EntityListeners(AuditingEntityListener.class)
 public class UserDTO {
-    private int userId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int userid;
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
     //private Date birthDate;
+
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "phone", nullable = false)
     private String phone;
     //private String displayPicture;
 
@@ -14,7 +33,7 @@ public class UserDTO {
     }
 
     public UserDTO(int userId, String firstName, String lastName, String email, String phone) {
-        this.userId = userId;
+        this.userid = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -22,11 +41,11 @@ public class UserDTO {
     }
 
     public int getUserId() {
-        return userId;
+        return userid;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        this.userid = userId;
     }
 
     public String getFirstName() {
