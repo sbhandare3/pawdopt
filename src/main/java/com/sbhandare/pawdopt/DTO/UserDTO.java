@@ -1,51 +1,31 @@
 package com.sbhandare.pawdopt.DTO;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.persistence.*;
+import java.util.Date;
 
-@Entity
-@Table(name="userdetail")
-@EntityListeners(AuditingEntityListener.class)
 public class UserDTO {
+    private int id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int userid;
-
-    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    //private Date birthDate;
+    @JsonFormat(pattern="MM/dd/yyyy")
+    private Date birthDate;
 
-    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "phone", nullable = false)
     private String phone;
-    //private String displayPicture;
 
+    private String image;
 
-    public UserDTO() {
+    public int getId() {
+        return id;
     }
 
-    public UserDTO(int userId, String firstName, String lastName, String email, String phone) {
-        this.userid = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phone = phone;
-    }
-
-    public int getUserId() {
-        return userid;
-    }
-
-    public void setUserId(int userId) {
-        this.userid = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -64,6 +44,14 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -78,5 +66,13 @@ public class UserDTO {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
