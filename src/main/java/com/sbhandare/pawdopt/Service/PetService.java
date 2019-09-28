@@ -5,8 +5,9 @@ import com.sbhandare.pawdopt.DTO.PetDTO;
 import java.util.List;
 
 public interface PetService {
-    public PetDTO getPetById(int id);
-    public List<PetDTO> getAllPets();
-    public List<PetDTO> getPetsByUserId(int userid);
-    public void savePet(PetDTO petDTO, int orgid);
+    PetDTO getPetById(int id);
+    List<PetDTO> getAllPets();
+    List<PetDTO> getPetsByUserId(int userid);
+    List<PetDTO> getPetsByOrgId(int orgid);
+    void savePet(PetDTO petDTO, int orgid);
 }

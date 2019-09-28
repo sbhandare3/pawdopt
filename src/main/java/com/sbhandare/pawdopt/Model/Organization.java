@@ -1,12 +1,7 @@
 package com.sbhandare.pawdopt.Model;
 
-import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -23,7 +18,6 @@ public class Organization {
     @Column(name = "name", nullable = false)
     private String name;
 
-    //@JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "addressid")
     private Address address;
@@ -55,7 +49,6 @@ public class Organization {
     @Column(name = "youtubelink")
     private String youtubeLink;
 
-    //@JsonBackReference
     @OneToMany(mappedBy = "organization")
     private Set<Pet> pets;
 

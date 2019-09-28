@@ -17,9 +17,11 @@ public class PetController {
     @Autowired
     private PetService petService;
 
-    @RequestMapping(value = "/allpets", method = RequestMethod.GET)
-    public List<PetDTO> getAllPets() {
-        return petService.getAllPets();
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public List<PetDTO> getAllPets(@RequestParam(value="orgid", defaultValue = "-1") int orgid) {
+        if(orgid == -1)
+            return petService.getAllPets();
+        return petService.getPetsByOrgId(orgid);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

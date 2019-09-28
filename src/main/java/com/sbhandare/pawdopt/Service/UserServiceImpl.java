@@ -1,6 +1,5 @@
 package com.sbhandare.pawdopt.Service;
 
-import com.sbhandare.pawdopt.DTO.PetDTO;
 import com.sbhandare.pawdopt.DTO.UserDTO;
 import com.sbhandare.pawdopt.Model.User;
 import com.sbhandare.pawdopt.Repository.UserRepository;

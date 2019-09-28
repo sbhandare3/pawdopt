@@ -1,6 +1,5 @@
 package com.sbhandare.pawdopt.Model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -57,7 +56,6 @@ public class Pet {
     @Column(name = "goodwithdogs", nullable = false)
     private String isGoodWithDogs;
 
-    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "organizationid", nullable = false)
     private Organization organization;

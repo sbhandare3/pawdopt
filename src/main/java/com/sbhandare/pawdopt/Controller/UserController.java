@@ -1,9 +1,6 @@
 package com.sbhandare.pawdopt.Controller;
 
-import com.sbhandare.pawdopt.DTO.PetDTO;
 import com.sbhandare.pawdopt.DTO.UserDTO;
-import com.sbhandare.pawdopt.Model.User;
-import com.sbhandare.pawdopt.Repository.UserRepository;
 import com.sbhandare.pawdopt.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +16,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRepository userRepository;
 
-    @RequestMapping(value = "/allusers", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }

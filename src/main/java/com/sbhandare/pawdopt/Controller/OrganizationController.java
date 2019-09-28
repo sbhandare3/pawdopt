@@ -16,8 +16,8 @@ public class OrganizationController {
     @Autowired
     private OrganizationService organizationService;
 
-    @RequestMapping(value = "/allorganizations", method = RequestMethod.GET)
-    public List<OrganizationDTO> getAllPets() {
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public List<OrganizationDTO> getAllOrganizations() {
         return organizationService.getAllOrganizations();
     }
 

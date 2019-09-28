@@ -1,6 +1,5 @@
 package com.sbhandare.pawdopt.Model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -32,7 +31,6 @@ public class Address {
     @Column(name = "zipcode", nullable = false)
     private String zipCode;
 
-    //@JsonBackReference
     @OneToOne(mappedBy = "address")
     private Organization organization;
 

@@ -67,4 +67,16 @@ public class PetServiceImpl implements PetService {
             petRepository.save(pet);
         }
     }
+
+    @Override
+    public List<PetDTO> getPetsByOrgId(int orgid) {
+        Optional<Organization> optionalOrganization = organizationRepository.findById(orgid);
+        if(optionalOrganization.isPresent()) {
+            Set<Pet> petByOrgList = optionalOrganization.get().getPets();
+            if (petByOrgList != null && !petByOrgList.isEmpty()) {
+                return petByOrgList.stream().map(pet -> modelMapper.map(pet, PetDTO.class)).collect(Collectors.toList());
+            }
+        }
+        return Collections.emptyList();
+    }
 }
