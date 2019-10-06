@@ -7,6 +7,8 @@ public class PetDTO {
 
     private String breed;
 
+    private String typeCode;
+
     private String gender;
 
     private String age;
@@ -30,6 +32,8 @@ public class PetDTO {
     private String isGoodWithChildren;
 
     private String isGoodWithDogs;
+
+    private String isAdoptable;
 
     private OrganizationDTO organizationDTO;
 
@@ -153,11 +157,27 @@ public class PetDTO {
         this.isGoodWithDogs = isGoodWithDogs;
     }
 
+    public String getIsAdoptable() {
+        return isAdoptable;
+    }
+
+    public void setIsAdoptable(String isAdoptable) {
+        this.isAdoptable = isAdoptable;
+    }
+
     public OrganizationDTO getOrganizationDTO() {
         return organizationDTO;
     }
 
     public void setOrganizationDTO(OrganizationDTO organizationDTO) {
         this.organizationDTO = organizationDTO;
+    }
+
+    public String getTypeCode() {
+        return typeCode;
+    }
+
+    public void setTypeCode(String type) {
+        this.typeCode = type;
     }
 }

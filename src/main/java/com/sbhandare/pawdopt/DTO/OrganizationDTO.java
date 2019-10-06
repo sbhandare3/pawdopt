@@ -26,6 +26,8 @@ public class OrganizationDTO {
 
     private String youtubeLink;
 
+    private String petfinderCode;
+
     public int getOrganizationid() {
         return organizationid;
     }
@@ -120,5 +122,13 @@ public class OrganizationDTO {
 
     public void setYoutubeLink(String youtubeLink) {
         this.youtubeLink = youtubeLink;
+    }
+
+    public String getPetfinderCode() {
+        return petfinderCode;
+    }
+
+    public void setPetfinderCode(String petfinderCode) {
+        this.petfinderCode = petfinderCode;
     }
 }

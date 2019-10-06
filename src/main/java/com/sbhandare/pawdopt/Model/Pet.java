@@ -41,20 +41,23 @@ public class Pet {
     @Column(name = "image", nullable = false)
     private String image;
 
-    @Column(name = "vaccinated", nullable = false)
+    @Column(name = "vaccinated")
     private String isVaccinated;
 
-    @Column(name = "spayedneutered", nullable = false)
+    @Column(name = "spayedneutered")
     private String isSpayedNeutered;
 
-    @Column(name = "goodwithcats", nullable = false)
+    @Column(name = "goodwithcats")
     private String isGoodWithCats;
 
-    @Column(name = "goodwithchildren", nullable = false)
+    @Column(name = "goodwithchildren")
     private String isGoodWithChildren;
 
-    @Column(name = "goodwithdogs", nullable = false)
+    @Column(name = "goodwithdogs")
     private String isGoodWithDogs;
+
+    @Column(name = "adoptable")
+    private String isAdoptable;
 
     @ManyToOne
     @JoinColumn(name = "organizationid", nullable = false)
@@ -62,6 +65,10 @@ public class Pet {
 
     @ManyToMany(mappedBy = "likedPets")
     private Set<User> likedUsers;
+
+    @ManyToOne
+    @JoinColumn(name = "pettypeid", nullable = false)
+    private PetType petType;
 
     public int getPetid() {
         return petid;
@@ -183,6 +190,14 @@ public class Pet {
         isGoodWithDogs = goodWithDogs;
     }
 
+    public String isAdoptable() {
+        return isAdoptable;
+    }
+
+    public void setAdoptable(String isAdoptable) {
+        this.isAdoptable = isAdoptable;
+    }
+
     public Organization getOrganization() {
         return organization;
     }
@@ -197,5 +212,13 @@ public class Pet {
 
     public void setLikedUsers(Set<User> likedUsers) {
         this.likedUsers = likedUsers;
+    }
+
+    public PetType getPetType() {
+        return petType;
+    }
+
+    public void setPetType(PetType petType) {
+        this.petType = petType;
     }
 }

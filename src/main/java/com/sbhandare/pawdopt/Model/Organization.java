@@ -49,6 +49,9 @@ public class Organization {
     @Column(name = "youtubelink")
     private String youtubeLink;
 
+    @Column(name = "petfinder_code")
+    private String petfinderCode;
+
     @OneToMany(mappedBy = "organization")
     private Set<Pet> pets;
 
@@ -146,6 +149,14 @@ public class Organization {
 
     public void setYoutubeLink(String youtubeLink) {
         this.youtubeLink = youtubeLink;
+    }
+
+    public String getPetfinderCode() {
+        return petfinderCode;
+    }
+
+    public void setPetfinderCode(String petfinderCode) {
+        this.petfinderCode = petfinderCode;
     }
 
     public Set<Pet> getPets() {

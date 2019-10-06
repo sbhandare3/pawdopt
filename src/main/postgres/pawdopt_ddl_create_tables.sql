@@ -30,7 +30,8 @@ CREATE TABLE organization(
     fblink VARCHAR,
     twitterlink VARCHAR,
     instalink VARCHAR,
-    youtubelink VARCHAR
+    youtubelink VARCHAR,
+    petfinder_code VARCHAR (15)
 );
 
 CREATE TABLE pet(
@@ -49,7 +50,9 @@ CREATE TABLE pet(
     goodwithcats VARCHAR (1),
     goodwithchildren VARCHAR (1),
     goodwithdogs VARCHAR (1),
-    organizationid INTEGER REFERENCES organization (organizationid)
+    organizationid INTEGER REFERENCES organization (organizationid),
+    adoptable VARCHAR (1),
+    pettypeid INTEGER REFERENCES pet_type (pettypeid) NOT NULL
 );
 
 CREATE TABLE user_like (
@@ -57,3 +60,9 @@ CREATE TABLE user_like (
     userid INTEGER REFERENCES userdetail (userid),
     petid INTEGER REFERENCES pet (petid)
 );
+
+CREATE TABLE pet_type (
+    pettypeid serial PRIMARY KEY,
+    type_code VARCHAR (4) NOT NULL UNIQUE,
+    type_desc VARCHAR(15) NOT NULL
+)
