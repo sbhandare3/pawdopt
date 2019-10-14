@@ -41,9 +41,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void saveOrganization(OrganizationDTO organizationDTO) {
-        Organization organization = modelMapper.map(organizationDTO, Organization.class);
-        Address address = organization.getAddress();
-        address.setOrganization(organization);
-        organizationRepository.save(organization);
+        if(organizationDTO.getPetfinderCode()==null
+                || (organizationDTO.getPetfinderCode()!=null && organizationRepository.findByPetfinderCode(organizationDTO.getPetfinderCode())==null)) {
+            Organization organization = modelMapper.map(organizationDTO, Organization.class);
+            Address address = organization.getAddress();
+            address.setOrganization(organization);
+            organizationRepository.save(organization);
+        }
     }
 }

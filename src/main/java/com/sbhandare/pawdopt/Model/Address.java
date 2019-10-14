@@ -13,7 +13,7 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private int addressid;
 
-    @Column(name = "street1", nullable = false)
+    @Column(name = "street1")
     private String street1;
 
     @Column(name = "street2")

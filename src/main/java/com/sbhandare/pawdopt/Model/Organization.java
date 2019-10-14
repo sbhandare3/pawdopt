@@ -22,10 +22,10 @@ public class Organization {
     @JoinColumn(name = "address_id", referencedColumnName = "addressid")
     private Address address;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "phone", nullable = false)
+    @Column(name = "phone")
     private String phone;
 
     @Column(name = "bio")

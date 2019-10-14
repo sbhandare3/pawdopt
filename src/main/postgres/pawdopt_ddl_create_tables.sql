@@ -10,7 +10,7 @@ CREATE TABLE userdetail(
 
 CREATE TABLE address(
    addressid serial PRIMARY KEY,
-   street1 VARCHAR (255) NOT NULL,
+   street1 VARCHAR (255),
    street2 VARCHAR (255),
    city VARCHAR (50) NOT NULL,
    state VARCHAR (50) NOT NULL,
@@ -22,8 +22,8 @@ CREATE TABLE organization(
     organizationid serial PRIMARY KEY,
     name VARCHAR (255) NOT NULL,
     address_id INTEGER REFERENCES address (addressid),
-    email VARCHAR (355) NOT NULL,
-    phone VARCHAR (10) NOT NULL,
+    email VARCHAR (355),
+    phone VARCHAR (10),
     image VARCHAR,
     bio VARCHAR,
     weblink VARCHAR NOT NULL,
@@ -65,4 +65,21 @@ CREATE TABLE pet_type (
     pettypeid serial PRIMARY KEY,
     type_code VARCHAR (4) NOT NULL UNIQUE,
     type_desc VARCHAR(15) NOT NULL
-)
+);
+
+CREATE TABLE user_login (
+    userloginid serial PRIMARY KEY,
+    username VARCHAR (20) NOT NULL UNIQUE,
+    password VARCHAR (20) NOT NULL
+);
+
+CREATE TABLE role (
+    roleid serial PRIMARY KEY,
+    rolename VARCHAR (20) NOT NULL
+);
+
+CREATE TABLE user_role (
+    userroleid serial PRIMARY KEY,
+    userloginid INTEGER REFERENCES user_login (userloginid),
+    roleid serial INTEGER REFERENCES role (roleid)
+);
