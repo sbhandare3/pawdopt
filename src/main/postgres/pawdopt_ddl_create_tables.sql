@@ -5,7 +5,8 @@ CREATE TABLE userdetail(
    email VARCHAR (355) UNIQUE NOT NULL,
    phone VARCHAR (10) NOT NULL,
    image VARCHAR,
-   dob DATE
+   dob DATE,
+   secuid INTEGER REFERENCES security_user (secuid)
 );
 
 CREATE TABLE address(
@@ -52,6 +53,10 @@ CREATE TABLE pet(
     goodwithdogs VARCHAR (1),
     organizationid INTEGER REFERENCES organization (organizationid),
     adoptable VARCHAR (1),
+    housetrained VARCHAR (1),
+    declawed VARCHAR (1),
+    specialneeds VARCHAR (1),
+    tags VARCHAR (255),
     pettypeid INTEGER REFERENCES pet_type (pettypeid) NOT NULL
 );
 
@@ -67,19 +72,19 @@ CREATE TABLE pet_type (
     type_desc VARCHAR(15) NOT NULL
 );
 
-CREATE TABLE user_login (
-    userloginid serial PRIMARY KEY,
+CREATE TABLE security_user (
+    secuid serial PRIMARY KEY,
     username VARCHAR (20) NOT NULL UNIQUE,
-    password VARCHAR (20) NOT NULL
+    password VARCHAR (100) NOT NULL
 );
 
 CREATE TABLE role (
     roleid serial PRIMARY KEY,
-    rolename VARCHAR (20) NOT NULL
+    rolename VARCHAR (10) NOT NULL UNIQUE
 );
 
 CREATE TABLE user_role (
-    userroleid serial PRIMARY KEY,
-    userloginid INTEGER REFERENCES user_login (userloginid),
-    roleid serial INTEGER REFERENCES role (roleid)
+    secuserroleid serial PRIMARY KEY,
+    secuid INTEGER REFERENCES security_user (secuid),
+    roleid INTEGER REFERENCES role (roleid)
 );

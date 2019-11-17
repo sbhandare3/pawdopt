@@ -9,5 +9,5 @@ public interface PetService {
     List<PetDTO> getAllPets();
     List<PetDTO> getPetsByUserId(int userid);
     List<PetDTO> getPetsByOrgId(int orgid);
-    void savePet(PetDTO petDTO, int orgid);
+    int savePet(PetDTO petDTO, int orgid);
 }

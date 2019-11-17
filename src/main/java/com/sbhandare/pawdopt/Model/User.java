@@ -39,6 +39,10 @@ public class User {
     @JoinTable(name = "user_like", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "petid"))
     private Set<Pet> likedPets;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "secuid", referencedColumnName = "secuid")
+    private SecurityUser securityUser;
+
     public Set<Pet> getLikedPets() {
         return likedPets;
     }
@@ -101,5 +105,13 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public SecurityUser getSecurityUser() {
+        return securityUser;
+    }
+
+    public void setSecurityUser(SecurityUser securityUser) {
+        this.securityUser = securityUser;
     }
 }

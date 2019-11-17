@@ -1,11 +1,10 @@
 package com.sbhandare.pawdopt.Service;
 
 import com.sbhandare.pawdopt.DTO.OrganizationDTO;
-
-import java.util.List;
+import com.sbhandare.pawdopt.DTO.PageDTO;
 
 public interface OrganizationService {
     OrganizationDTO getOrganizationById(int id);
-    List<OrganizationDTO> getAllOrganizations();
-    void saveOrganization(OrganizationDTO organizationDTO);
+    PageDTO getAllOrganizations();
+    int saveOrganization(OrganizationDTO organizationDTO);
 }

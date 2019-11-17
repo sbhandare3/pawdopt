@@ -1,14 +1,15 @@
 package com.sbhandare.pawdopt.Controller;
 
 import com.sbhandare.pawdopt.DTO.OrganizationDTO;
+import com.sbhandare.pawdopt.DTO.PageDTO;
 import com.sbhandare.pawdopt.Service.OrganizationService;
+import com.sbhandare.pawdopt.Util.PawdoptConstantUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/organization")
@@ -17,21 +18,26 @@ public class OrganizationController {
     private OrganizationService organizationService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<OrganizationDTO> getAllOrganizations() {
-        return organizationService.getAllOrganizations();
+    public Object getAllOrganizations() {
+        PageDTO orgPageDTO = organizationService.getAllOrganizations();
+        if(orgPageDTO == null)
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return orgPageDTO;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public OrganizationDTO getOrganization(@PathVariable(value = "id") int orgid)
-            throws Exception {
-        return organizationService.getOrganizationById(orgid);
+    public Object getOrganization(@PathVariable(value = "id") int orgid) {
+        OrganizationDTO organizationDTO = organizationService.getOrganizationById(orgid);
+        if (organizationDTO == null)
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return organizationDTO;
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Map<String, Boolean> createOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) {
-        organizationService.saveOrganization(organizationDTO);
-        Map<String,Boolean> response = new HashMap<>();
-        response.put("Organization Created", Boolean.TRUE);
-        return response;
+    public Object createOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) {
+        int newOrgId = organizationService.saveOrganization(organizationDTO);
+        if(newOrgId == PawdoptConstantUtil.NO_SUCCESS)
+            return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 }

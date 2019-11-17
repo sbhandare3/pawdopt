@@ -1,5 +1,7 @@
 package com.sbhandare.pawdopt.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class OrganizationDTO {
 
     private int organizationid;
@@ -44,6 +46,7 @@ public class OrganizationDTO {
         this.name = name;
     }
 
+    @JsonProperty("address")
     public AddressDTO getAddressDTO() {
         return addressDTO;
     }

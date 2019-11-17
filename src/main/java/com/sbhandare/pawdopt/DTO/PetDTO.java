@@ -1,5 +1,7 @@
 package com.sbhandare.pawdopt.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PetDTO {
     private int petid;
 
@@ -34,6 +36,14 @@ public class PetDTO {
     private String isGoodWithDogs;
 
     private String isAdoptable;
+
+    private String isDeclawed;
+
+    private String isHouseTrained;
+
+    private String isSpecialNeeds;
+
+    private String tags;
 
     private OrganizationDTO organizationDTO;
 
@@ -165,6 +175,7 @@ public class PetDTO {
         this.isAdoptable = isAdoptable;
     }
 
+    @JsonProperty("organization")
     public OrganizationDTO getOrganizationDTO() {
         return organizationDTO;
     }
@@ -179,5 +190,37 @@ public class PetDTO {
 
     public void setTypeCode(String type) {
         this.typeCode = type;
+    }
+
+    public String getIsDeclawed() {
+        return isDeclawed;
+    }
+
+    public void setIsDeclawed(String isDeclawed) {
+        this.isDeclawed = isDeclawed;
+    }
+
+    public String getIsHouseTrained() {
+        return isHouseTrained;
+    }
+
+    public void setIsHouseTrained(String isHouseTrained) {
+        this.isHouseTrained = isHouseTrained;
+    }
+
+    public String getIsSpecialNeeds() {
+        return isSpecialNeeds;
+    }
+
+    public void setIsSpecialNeeds(String isSpecialNeeds) {
+        this.isSpecialNeeds = isSpecialNeeds;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

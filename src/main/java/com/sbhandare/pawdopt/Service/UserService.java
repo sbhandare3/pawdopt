@@ -7,5 +7,5 @@ import java.util.List;
 public interface UserService {
     UserDTO getUserById(int id);
     List<UserDTO> getAllUsers();
-    void saveUser(UserDTO userDTO);
+    int saveUser(UserDTO userDTO);
 }

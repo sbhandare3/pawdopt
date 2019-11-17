@@ -59,6 +59,18 @@ public class Pet {
     @Column(name = "adoptable")
     private String isAdoptable;
 
+    @Column(name = "declawed")
+    private String isDeclawed;
+
+    @Column(name = "housetrained")
+    private String isHouseTrained;
+
+    @Column(name = "specialneeds")
+    private String isSpecialNeeds;
+
+    @Column(name = "tags")
+    private String tags;
+
     @ManyToOne
     @JoinColumn(name = "organizationid", nullable = false)
     private Organization organization;
@@ -220,5 +232,37 @@ public class Pet {
 
     public void setPetType(PetType petType) {
         this.petType = petType;
+    }
+
+    public String isDeclawed() {
+        return isDeclawed;
+    }
+
+    public void setDeclawed(String isDeclawed) {
+        this.isDeclawed = isDeclawed;
+    }
+
+    public String isHouseTrained() {
+        return isHouseTrained;
+    }
+
+    public void setHouseTrained(String isHouseTrained) {
+        this.isHouseTrained = isHouseTrained;
+    }
+
+    public String isSpecialNeeds() {
+        return isSpecialNeeds;
+    }
+
+    public void setSpecialNeeds(String isSpecialNeeds) {
+        this.isSpecialNeeds = isSpecialNeeds;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

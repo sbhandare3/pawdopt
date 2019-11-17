@@ -2,13 +2,14 @@ package com.sbhandare.pawdopt.Controller;
 
 import com.sbhandare.pawdopt.DTO.UserDTO;
 import com.sbhandare.pawdopt.Service.UserService;
+import com.sbhandare.pawdopt.Util.PawdoptConstantUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -18,22 +19,27 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<UserDTO> getAllUsers() {
-        return userService.getAllUsers();
+    public Object getAllUsers() {
+        List<UserDTO> userList = userService.getAllUsers();
+        if(userList == null || userList.isEmpty())
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return userList;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public UserDTO getUser(@PathVariable(value = "id") int userid)
-            throws Exception {
-        return userService.getUserById(userid);
+    public Object getUser(@PathVariable(value = "id") int uid){
+        UserDTO userDTO = userService.getUserById(uid);
+        if(userDTO == null)
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return userDTO;
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Map<String, Boolean> createUser(@Valid @RequestBody UserDTO userDTO) {
-        userService.saveUser(userDTO);
-        Map<String,Boolean> response = new HashMap<>();
-        response.put("User Created", Boolean.TRUE);
-        return response;
+    public Object createUser(@Valid @RequestBody UserDTO userDTO) {
+        int uid = userService.saveUser(userDTO);
+        if(uid == PawdoptConstantUtil.NO_SUCCESS)
+            return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
     /*
