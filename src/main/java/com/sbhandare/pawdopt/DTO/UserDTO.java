@@ -11,12 +11,7 @@ public class UserDTO {
 
     private String lastName;
 
-    @JsonFormat(pattern="MM/dd/yyyy")
-    private Date birthDate;
-
     private String email;
-
-    private String phone;
 
     private String image;
 
@@ -44,28 +39,12 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getImage() {

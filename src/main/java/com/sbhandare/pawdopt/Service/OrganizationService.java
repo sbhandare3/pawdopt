@@ -5,6 +5,6 @@ import com.sbhandare.pawdopt.DTO.PageDTO;
 
 public interface OrganizationService {
     OrganizationDTO getOrganizationById(int id);
-    PageDTO getAllOrganizations();
+    PageDTO getAllOrganizations(int page);
     int saveOrganization(OrganizationDTO organizationDTO);
 }

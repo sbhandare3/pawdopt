@@ -1,11 +1,13 @@
 package com.sbhandare.pawdopt.Service;
 
+import com.sbhandare.pawdopt.DTO.PageDTO;
+import com.sbhandare.pawdopt.DTO.SecurityUserDTO;
 import com.sbhandare.pawdopt.DTO.UserDTO;
-
-import java.util.List;
 
 public interface UserService {
     UserDTO getUserById(int id);
-    List<UserDTO> getAllUsers();
-    int saveUser(UserDTO userDTO);
+    UserDTO getUserByUsername(String username);
+    PageDTO getAllUsers(int page);
+    int saveNewUser(UserDTO userDTO, SecurityUserDTO securityUserDTO);
+    int saveUserFavorite(String username, int petid);
 }

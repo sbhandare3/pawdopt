@@ -22,15 +22,8 @@ public class User {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "dob")
-    @JsonFormat(pattern="MM/dd/yyyy")
-    private Date birthDate;
-
     @Column(name = "email", nullable = false)
     private String email;
-
-    @Column(name = "phone", nullable = false)
-    private String phone;
 
     @Column(name = "image")
     private String image;
@@ -81,22 +74,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
     }
 
     public String getImage() {

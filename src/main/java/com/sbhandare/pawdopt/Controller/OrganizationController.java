@@ -18,8 +18,8 @@ public class OrganizationController {
     private OrganizationService organizationService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public Object getAllOrganizations() {
-        PageDTO orgPageDTO = organizationService.getAllOrganizations();
+    public Object getAllOrganizations(@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
+        PageDTO orgPageDTO = organizationService.getAllOrganizations(page);
         if(orgPageDTO == null)
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         return orgPageDTO;

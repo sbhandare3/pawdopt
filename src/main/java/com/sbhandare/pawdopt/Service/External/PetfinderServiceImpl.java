@@ -27,6 +27,8 @@ public class PetfinderServiceImpl implements PetfinderService {
     private OrganizationService organizationService;
     @Autowired
     private PetService petService;
+    @Autowired
+    private ObjectMapper mapper;
     @Value("${petfinder.client_id}")
     private String client_id;
     @Value("${petfinder.client_secret}")
@@ -51,7 +53,6 @@ public class PetfinderServiceImpl implements PetfinderService {
         Process process;
         try {
             process = Runtime.getRuntime().exec(command);
-            ObjectMapper mapper = new ObjectMapper();
             if (process != null) {
                 Map tokenMap = mapper.readValue(process.getInputStream(), Map.class);
                 if(tokenMap.containsKey("access_token"))
@@ -72,8 +73,6 @@ public class PetfinderServiceImpl implements PetfinderService {
             conn.setRequestMethod("GET");
 
             InputStream is = conn.getInputStream();
-
-            ObjectMapper mapper = new ObjectMapper();
             JsonNode orgsMap = mapper.readTree(is);
 
             List<OrganizationDTO> orgList = parseOrgsFromResponse(orgsMap.get("organizations"));
@@ -99,7 +98,6 @@ public class PetfinderServiceImpl implements PetfinderService {
         Iterator it  = orgsMap.elements();
         while(it.hasNext()){
             OrganizationDTO organizationDTO = new OrganizationDTO();
-            ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> orgProps = mapper.convertValue((JsonNode) it.next(), new TypeReference<Map<String, Object>>(){});
             Iterator orgPropsIt = orgProps.entrySet().iterator();
             while(orgPropsIt.hasNext()){
@@ -208,8 +206,6 @@ public class PetfinderServiceImpl implements PetfinderService {
                 conn.setRequestMethod("GET");
 
                 InputStream is = conn.getInputStream();
-
-                ObjectMapper mapper = new ObjectMapper();
                 JsonNode petMap = mapper.readTree(is);
 
                 List<PetDTO> petDTOList = parsePetsFromResponse(petMap.get("animals"));
@@ -228,8 +224,7 @@ public class PetfinderServiceImpl implements PetfinderService {
         Iterator it  = petMap.elements();
         while(it.hasNext()){
             PetDTO petDTO = new PetDTO();
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> petPropMap = objectMapper.convertValue((JsonNode)it.next(),new TypeReference<Map<String, Object>>(){});
+            Map<String, Object> petPropMap = mapper.convertValue((JsonNode)it.next(),new TypeReference<Map<String, Object>>(){});
             Iterator propIt = petPropMap.entrySet().iterator();
             while(propIt.hasNext()){
                 Map.Entry<String,Object> propPair = (Map.Entry) propIt.next();

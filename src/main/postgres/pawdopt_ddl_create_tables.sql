@@ -3,9 +3,7 @@ CREATE TABLE userdetail(
    first_name VARCHAR (50) NOT NULL,
    last_name VARCHAR (50) NOT NULL,
    email VARCHAR (355) UNIQUE NOT NULL,
-   phone VARCHAR (10) NOT NULL,
    image VARCHAR,
-   dob DATE,
    secuid INTEGER REFERENCES security_user (secuid)
 );
 

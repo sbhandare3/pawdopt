@@ -34,8 +34,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public PageDTO getAllOrganizations() {
-        Pageable pageWithRecords = PageRequest.of(0, PawdoptConstantUtil.DEFAULT_PAGE_RESULTS, Sort.by(
+    public PageDTO getAllOrganizations(int page) {
+        Pageable pageWithRecords = PageRequest.of(page, PawdoptConstantUtil.DEFAULT_PAGE_RESULTS, Sort.by(
                 "organizationid"));
         Page<Organization> organizationPageList = organizationRepository.findAll(pageWithRecords);
         List<OrganizationDTO> orgList = null;
@@ -47,8 +47,6 @@ public class OrganizationServiceImpl implements OrganizationService {
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setCurrentPage(organizationPageList.getNumber());
             paginationDTO.setResultsPerPage(organizationPageList.getNumberOfElements());
-            //paginationDTO.setNextPage();
-            //paginationDTO.setPrevPage();
 
             PageDTO pageDTO = new PageDTO(orgList, paginationDTO);
             return pageDTO;
@@ -63,7 +61,6 @@ public class OrganizationServiceImpl implements OrganizationService {
             Organization organization = modelMapper.map(organizationDTO, Organization.class);
             Address address = organization.getAddress();
             address.setOrganization(organization);
-            //Organization savedOrg = organizationRepository.saveAndFlush(organization);
             Organization savedOrg = organizationRepository.save(organization);
             if (savedOrg != null)
                 return savedOrg.getOrganizationid();
