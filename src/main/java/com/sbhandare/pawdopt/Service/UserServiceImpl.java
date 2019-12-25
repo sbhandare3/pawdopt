@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
 
     @Override
-    public UserDTO getUserById(int id) {
+    public UserDTO getUserById(long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.map(user -> modelMapper.map(user, UserDTO.class)).orElse(null);
     }
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int saveNewUser(UserDTO userDTO, SecurityUserDTO securityUserDTO) {
+    public long saveNewUser(UserDTO userDTO, SecurityUserDTO securityUserDTO) {
         User user = modelMapper.map(userDTO, User.class);
         SecurityUser securityUser = mapToSecurityUser(securityUserDTO);
         user.setSecurityUser(securityUser);
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int saveUserFavorite(String username, int petid) {
+    public long saveUserFavorite(String username, long petid) {
         SecurityUser securityUser = securityUserRepository.findByUsername(username);
         Optional<Pet> optionalPet = petRepository.findById(petid);
         if(securityUser != null && optionalPet.isPresent()) {

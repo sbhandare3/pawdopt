@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class OrganizationDTO {
 
-    private int organizationid;
+    private long organizationid;
 
     private String name;
 
@@ -30,11 +30,11 @@ public class OrganizationDTO {
 
     private String petfinderCode;
 
-    public int getOrganizationid() {
+    public long getOrganizationid() {
         return organizationid;
     }
 
-    public void setOrganizationid(int organizationid) {
+    public void setOrganizationid(long organizationid) {
         this.organizationid = organizationid;
     }
 

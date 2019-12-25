@@ -28,7 +28,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private OrganizationRepository organizationRepository;
 
     @Override
-    public OrganizationDTO getOrganizationById(int id) {
+    public OrganizationDTO getOrganizationById(long id) {
         Optional<Organization> optionalOrganization = organizationRepository.findById(id);
         return optionalOrganization.map(organization -> modelMapper.map(organization, OrganizationDTO.class)).orElse(null);
     }
@@ -55,7 +55,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public int saveOrganization(OrganizationDTO organizationDTO) {
+    public long saveOrganization(OrganizationDTO organizationDTO) {
         if (organizationDTO.getPetfinderCode() == null
                 || (organizationDTO.getPetfinderCode() != null && organizationRepository.findByPetfinderCode(organizationDTO.getPetfinderCode()) == null)) {
             Organization organization = modelMapper.map(organizationDTO, Organization.class);

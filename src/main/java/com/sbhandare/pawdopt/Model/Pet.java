@@ -12,7 +12,7 @@ public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int petid;
+    private long petid;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -82,11 +82,11 @@ public class Pet {
     @JoinColumn(name = "pettypeid", nullable = false)
     private PetType petType;
 
-    public int getPetid() {
+    public long getPetid() {
         return petid;
     }
 
-    public void setPetid(int petid) {
+    public void setPetid(long petid) {
         this.petid = petid;
     }
 

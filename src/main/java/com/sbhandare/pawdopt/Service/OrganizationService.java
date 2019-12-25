@@ -4,7 +4,7 @@ import com.sbhandare.pawdopt.DTO.OrganizationDTO;
 import com.sbhandare.pawdopt.DTO.PageDTO;
 
 public interface OrganizationService {
-    OrganizationDTO getOrganizationById(int id);
+    OrganizationDTO getOrganizationById(long id);
     PageDTO getAllOrganizations(int page);
-    int saveOrganization(OrganizationDTO organizationDTO);
+    long saveOrganization(OrganizationDTO organizationDTO);
 }

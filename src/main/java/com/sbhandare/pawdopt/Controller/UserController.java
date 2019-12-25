@@ -52,7 +52,7 @@ public class UserController {
     public Object createUser(@Valid @RequestBody Map<String,Object> userObj) {
         UserDTO userDTO = mapper.convertValue((Map) userObj.get("user"),UserDTO.class);
         SecurityUserDTO securityUserDTO = mapper.convertValue((Map) userObj.get("securityUser"),SecurityUserDTO.class);
-        int uid = userService.saveNewUser(userDTO, securityUserDTO);
+        long uid = userService.saveNewUser(userDTO, securityUserDTO);
 
         if(uid == PawdoptConstantUtil.NO_SUCCESS)
             return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
@@ -64,8 +64,8 @@ public class UserController {
 
     @RequestMapping(value = "/{username}", method = RequestMethod.POST)
     public Object addUserFavorite(@PathVariable(value = "username") String username,
-                                  @RequestParam(value = "petid", required = false) int petid){
-        int uid = userService.saveUserFavorite(username, petid);
+                                  @RequestParam(value = "petid", required = false) long petid){
+        long uid = userService.saveUserFavorite(username, petid);
         if(uid == PawdoptConstantUtil.NO_SUCCESS)
             return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
         return new ResponseEntity<Void>(HttpStatus.CREATED);

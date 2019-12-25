@@ -11,7 +11,7 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int addressid;
+    private long addressid;
 
     @Column(name = "street1")
     private String street1;
@@ -34,11 +34,11 @@ public class Address {
     @OneToOne(mappedBy = "address")
     private Organization organization;
 
-    public int getAddressid() {
+    public long getAddressid() {
         return addressid;
     }
 
-    public void setAddressid(int addressid) {
+    public void setAddressid(long addressid) {
         this.addressid = addressid;
     }
 

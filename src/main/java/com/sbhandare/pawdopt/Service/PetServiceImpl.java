@@ -37,7 +37,7 @@ public class PetServiceImpl implements PetService {
     private PetTypeRepository petTypeRepository;
 
     @Override
-    public PetDTO getPetById(int id) {
+    public PetDTO getPetById(long id) {
         Optional<Pet> optionalPet = petRepository.findById(id);
         return optionalPet.map(pet -> modelMapper.map(pet, PetDTO.class)).orElse(null);
     }
@@ -78,7 +78,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public List<PetDTO> getPetsByOrgId(int orgid) {
+    public List<PetDTO> getPetsByOrgId(long orgid) {
         Optional<Organization> optionalOrganization = organizationRepository.findById(orgid);
         if (optionalOrganization.isPresent()) {
             Set<Pet> petByOrgList = optionalOrganization.get().getPets();
@@ -93,7 +93,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public int savePet(PetDTO petDTO, int orgid) {
+    public long savePet(PetDTO petDTO, long orgid) {
         Pet pet = modelMapper.map(petDTO, Pet.class);
         Optional<Organization> optionalOrganization = organizationRepository.findById(orgid);
         String petTypeCode = petDTO.getTypeCode();

@@ -33,7 +33,7 @@ public class PetfinderServiceImpl implements PetfinderService {
     private String client_id;
     @Value("${petfinder.client_secret}")
     private String client_secret;
-    private Map<String, Integer> petfinderOrgIdMap;
+    private Map<String, Long> petfinderOrgIdMap = new HashMap<>();
 
     @Override
     public void getPetfinderData(){
@@ -41,7 +41,7 @@ public class PetfinderServiceImpl implements PetfinderService {
         if(!StringUtils.isEmpty(token)){
             System.out.println(token);
             saveOrganizations(token);
-            savePets(token);
+            //savePets(token);
         }
     }
 
@@ -65,31 +65,36 @@ public class PetfinderServiceImpl implements PetfinderService {
     }
 
     private void saveOrganizations(String token){
-        try {
-            URL url = new URL("https://api.petfinder.com/v2/organizations");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        int page = 1;
+        while(true) {
+            try {
+                URL url = new URL("https://api.petfinder.com/v2/organizations?page="+page);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestProperty("Authorization", "Bearer " + token);
-            conn.setRequestMethod("GET");
+                conn.setRequestProperty("Authorization", "Bearer " + token);
+                conn.setRequestMethod("GET");
 
-            InputStream is = conn.getInputStream();
-            JsonNode orgsMap = mapper.readTree(is);
+                InputStream is = conn.getInputStream();
+                JsonNode orgsMap = mapper.readTree(is);
 
-            List<OrganizationDTO> orgList = parseOrgsFromResponse(orgsMap.get("organizations"));
+                if(page>orgsMap.get("pagination").get("total_pages").intValue())
+                    break;
 
-            if(orgList!=null & !orgList.isEmpty()){
-                petfinderOrgIdMap = new HashMap<>();
-                for (OrganizationDTO organizationDTO : orgList) {
-                    int orgId = organizationService.saveOrganization(organizationDTO);
-                    if(orgId!=-1)
-                        petfinderOrgIdMap.put(organizationDTO.getPetfinderCode(),orgId);
+                List<OrganizationDTO> orgList = parseOrgsFromResponse(orgsMap.get("organizations"));
+
+                if (!orgList.isEmpty()) {
+                    for (OrganizationDTO organizationDTO : orgList) {
+                        long orgId = organizationService.saveOrganization(organizationDTO);
+                        if (orgId != PawdoptConstantUtil.NO_SUCCESS)
+                            petfinderOrgIdMap.put(organizationDTO.getPetfinderCode(), orgId);
+                    }
                 }
+                page++;
+                is.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            is.close();
-
-        }catch (IOException e){
-            e.printStackTrace();
         }
     }
 
@@ -181,6 +186,12 @@ public class PetfinderServiceImpl implements PetfinderService {
                             }
                             break;
                         case "photos":
+                            List photoArray = (ArrayList) propPair.getValue();
+                            if(photoArray!=null && !photoArray.isEmpty()){
+                                LinkedHashMap photo = (LinkedHashMap) photoArray.get(0);
+                                if(photo.containsKey("full"))
+                                    organizationDTO.setImage((String) photo.get("full"));
+                            }
                             break;
                         default:
                             break;

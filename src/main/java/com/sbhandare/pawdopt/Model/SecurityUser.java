@@ -3,7 +3,6 @@ package com.sbhandare.pawdopt.Model;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,7 +12,7 @@ public class SecurityUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int secuid;
+    private long secuid;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -28,11 +27,11 @@ public class SecurityUser {
     @OneToOne(mappedBy = "securityUser")
     private User user;
 
-    public int getSecuid() {
+    public long getSecuid() {
         return secuid;
     }
 
-    public void setSecuid(int secuid) {
+    public void setSecuid(long secuid) {
         this.secuid = secuid;
     }
 

@@ -1,7 +1,7 @@
 package com.sbhandare.pawdopt.DTO;
 
 public class AddressDTO {
-    private int addressid;
+    private long addressid;
 
     private String street1;
 
@@ -15,11 +15,11 @@ public class AddressDTO {
 
     private String zipCode;
 
-    public int getAddressid() {
+    public long getAddressid() {
         return addressid;
     }
 
-    public void setAddressid(int addressid) {
+    public void setAddressid(long addressid) {
         this.addressid = addressid;
     }
 

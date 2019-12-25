@@ -1,11 +1,7 @@
 package com.sbhandare.pawdopt.DTO;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.util.Date;
-
 public class UserDTO {
-    private int id;
+    private long id;
 
     private String firstName;
 
@@ -15,11 +11,11 @@ public class UserDTO {
 
     private String image;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

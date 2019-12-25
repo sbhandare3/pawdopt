@@ -13,7 +13,7 @@ public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int organizationid;
+    private long organizationid;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -55,11 +55,11 @@ public class Organization {
     @OneToMany(mappedBy = "organization")
     private Set<Pet> pets;
 
-    public int getOrganizationid() {
+    public long getOrganizationid() {
         return organizationid;
     }
 
-    public void setOrganizationid(int organizationid) {
+    public void setOrganizationid(long organizationid) {
         this.organizationid = organizationid;
     }
 

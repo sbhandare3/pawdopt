@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface PetTypeRepository extends JpaRepository<PetType,Integer> {
+public interface PetTypeRepository extends JpaRepository<PetType, Long> {
     @Query(value = "select * from pet_type pt where pt.type_code = :code", nativeQuery = true)
     PetType findByTypeCode(@Param("code") String code);
 }

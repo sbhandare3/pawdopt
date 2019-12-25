@@ -12,7 +12,7 @@ public class PetType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int pettypeid;
+    private long pettypeid;
 
     @Column(name = "type_code")
     private String petTypeCode;
@@ -23,11 +23,11 @@ public class PetType {
     @OneToMany(mappedBy = "petType")
     private Set<Pet> petList;
 
-    public int getPettypeid() {
+    public long getPettypeid() {
         return pettypeid;
     }
 
-    public void setPettypeid(int pettypeid) {
+    public void setPettypeid(long pettypeid) {
         this.pettypeid = pettypeid;
     }
 

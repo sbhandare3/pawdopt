@@ -26,7 +26,7 @@ public class OrganizationController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Object getOrganization(@PathVariable(value = "id") int orgid) {
+    public Object getOrganization(@PathVariable(value = "id") long orgid) {
         OrganizationDTO organizationDTO = organizationService.getOrganizationById(orgid);
         if (organizationDTO == null)
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -35,7 +35,7 @@ public class OrganizationController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public Object createOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) {
-        int newOrgId = organizationService.saveOrganization(organizationDTO);
+        long newOrgId = organizationService.saveOrganization(organizationDTO);
         if(newOrgId == PawdoptConstantUtil.NO_SUCCESS)
             return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
         return new ResponseEntity<Void>(HttpStatus.CREATED);

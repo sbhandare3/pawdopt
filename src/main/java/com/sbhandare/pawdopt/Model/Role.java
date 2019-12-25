@@ -12,7 +12,7 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int roleid;
+    private long roleid;
 
     @Column(name = "rolename", nullable = false)
     private String roleName;
@@ -20,11 +20,11 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<SecurityUser> securityUsers;
 
-    public int getRoleid() {
+    public long getRoleid() {
         return roleid;
     }
 
-    public void setRoleid(int roleid) {
+    public void setRoleid(long roleid) {
         this.roleid = roleid;
     }
 

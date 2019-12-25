@@ -5,9 +5,9 @@ import com.sbhandare.pawdopt.DTO.SecurityUserDTO;
 import com.sbhandare.pawdopt.DTO.UserDTO;
 
 public interface UserService {
-    UserDTO getUserById(int id);
+    UserDTO getUserById(long id);
     UserDTO getUserByUsername(String username);
     PageDTO getAllUsers(int page);
-    int saveNewUser(UserDTO userDTO, SecurityUserDTO securityUserDTO);
-    int saveUserFavorite(String username, int petid);
+    long saveNewUser(UserDTO userDTO, SecurityUserDTO securityUserDTO);
+    long saveUserFavorite(String username, long petid);
 }

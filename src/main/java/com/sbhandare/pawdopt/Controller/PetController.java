@@ -20,7 +20,7 @@ public class PetController {
     private PetService petService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public Object getAllPets(@RequestParam(value = "orgid", required = false) Integer orgid,
+    public Object getAllPets(@RequestParam(value = "orgid", required = false) Long orgid,
                              @RequestParam(value = "username", required = false) String username,
                              @RequestParam(value = "type", required = false) String type,
                              @RequestParam(value = "location", required = false) String location,
@@ -46,7 +46,7 @@ public class PetController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Object getPet(@PathVariable(value = "id") int petid) {
+    public Object getPet(@PathVariable(value = "id") long petid) {
         PetDTO petDTO = petService.getPetById(petid);
         if (petDTO == null)
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -54,8 +54,8 @@ public class PetController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Object createPet(@Valid @RequestBody PetDTO petDTO, @RequestParam(name = "orgid") int orgid) {
-        int petid = petService.savePet(petDTO,orgid);
+    public Object createPet(@Valid @RequestBody PetDTO petDTO, @RequestParam(name = "orgid") long orgid) {
+        long petid = petService.savePet(petDTO,orgid);
         if(petid == PawdoptConstantUtil.NO_SUCCESS)
             return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
         return new ResponseEntity<Void>(HttpStatus.CREATED);

@@ -3,7 +3,7 @@ package com.sbhandare.pawdopt.DTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PetDTO {
-    private int petid;
+    private long petid;
 
     private String name;
 
@@ -47,11 +47,11 @@ public class PetDTO {
 
     private OrganizationDTO organizationDTO;
 
-    public int getPetid() {
+    public long getPetid() {
         return petid;
     }
 
-    public void setPetid(int petid) {
+    public void setPetid(long petid) {
         this.petid = petid;
     }
 

@@ -1,10 +1,8 @@
 package com.sbhandare.pawdopt.Model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -14,7 +12,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int userid;
+    private long userid;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -44,11 +42,11 @@ public class User {
         this.likedPets = likedPets;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userid;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userid = userId;
     }
 

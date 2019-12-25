@@ -4,7 +4,7 @@ CREATE TABLE userdetail(
    last_name VARCHAR (50) NOT NULL,
    email VARCHAR (355) UNIQUE NOT NULL,
    image VARCHAR,
-   secuid INTEGER REFERENCES security_user (secuid)
+   secuid BIGINT REFERENCES security_user (secuid)
 );
 
 CREATE TABLE address(
@@ -20,9 +20,9 @@ CREATE TABLE address(
 CREATE TABLE organization(
     organizationid serial PRIMARY KEY,
     name VARCHAR (255) NOT NULL,
-    address_id INTEGER REFERENCES address (addressid),
+    address_id BIGINT REFERENCES address (addressid),
     email VARCHAR (355),
-    phone VARCHAR (10),
+    phone VARCHAR (15),
     image VARCHAR,
     bio VARCHAR,
     weblink VARCHAR NOT NULL,
@@ -49,19 +49,19 @@ CREATE TABLE pet(
     goodwithcats VARCHAR (1),
     goodwithchildren VARCHAR (1),
     goodwithdogs VARCHAR (1),
-    organizationid INTEGER REFERENCES organization (organizationid),
+    organizationid BIGINT REFERENCES organization (organizationid),
     adoptable VARCHAR (1),
     housetrained VARCHAR (1),
     declawed VARCHAR (1),
     specialneeds VARCHAR (1),
     tags VARCHAR (255),
-    pettypeid INTEGER REFERENCES pet_type (pettypeid) NOT NULL
+    pettypeid BIGINT REFERENCES pet_type (pettypeid) NOT NULL
 );
 
 CREATE TABLE user_like (
     userlikeid serial PRIMARY KEY,
-    userid INTEGER REFERENCES userdetail (userid),
-    petid INTEGER REFERENCES pet (petid)
+    userid BIGINT REFERENCES userdetail (userid),
+    petid BIGINT REFERENCES pet (petid)
 );
 
 CREATE TABLE pet_type (
@@ -83,6 +83,6 @@ CREATE TABLE role (
 
 CREATE TABLE user_role (
     secuserroleid serial PRIMARY KEY,
-    secuid INTEGER REFERENCES security_user (secuid),
-    roleid INTEGER REFERENCES role (roleid)
+    secuid BIGINT REFERENCES security_user (secuid) NOT NULL,
+    roleid BIGINT REFERENCES role (roleid) NOT NULL
 );

@@ -2,17 +2,17 @@ package com.sbhandare.pawdopt.DTO;
 
 public class SecurityUserDTO {
 
-    private int secuid;
+    private long secuid;
 
     private String username;
 
     private String password;
 
-    public int getSecuid() {
+    public long getSecuid() {
         return secuid;
     }
 
-    public void setSecuid(int secuid) {
+    public void setSecuid(long secuid) {
         this.secuid = secuid;
     }
 
