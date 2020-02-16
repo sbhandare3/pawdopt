@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sbhandare.pawdopt.DTO.AddressDTO;
 import com.sbhandare.pawdopt.DTO.OrganizationDTO;
 import com.sbhandare.pawdopt.DTO.PetDTO;
+import com.sbhandare.pawdopt.DTO.PetTypeDTO;
 import com.sbhandare.pawdopt.Service.OrganizationService;
 import com.sbhandare.pawdopt.Service.PetService;
 import com.sbhandare.pawdopt.Util.PawdoptConstantUtil;
@@ -34,6 +35,7 @@ public class PetfinderServiceImpl implements PetfinderService {
     @Value("${petfinder.client_secret}")
     private String client_secret;
     private Map<String, Long> petfinderOrgIdMap = new HashMap<>();
+    private Map<String, String> petTypeMap;
 
     @Override
     public void getPetfinderData(){
@@ -41,7 +43,7 @@ public class PetfinderServiceImpl implements PetfinderService {
         if(!StringUtils.isEmpty(token)){
             System.out.println(token);
             saveOrganizations(token);
-            //savePets(token);
+            savePets(token);
         }
     }
 
@@ -77,7 +79,7 @@ public class PetfinderServiceImpl implements PetfinderService {
                 InputStream is = conn.getInputStream();
                 JsonNode orgsMap = mapper.readTree(is);
 
-                if(page>orgsMap.get("pagination").get("total_pages").intValue())
+                if(petfinderOrgIdMap.size()>=100 || page>orgsMap.get("pagination").get("total_pages").intValue())
                     break;
 
                 List<OrganizationDTO> orgList = parseOrgsFromResponse(orgsMap.get("organizations"));
@@ -187,7 +189,7 @@ public class PetfinderServiceImpl implements PetfinderService {
                             break;
                         case "photos":
                             List photoArray = (ArrayList) propPair.getValue();
-                            if(photoArray!=null && !photoArray.isEmpty()){
+                            if(!photoArray.isEmpty()){
                                 LinkedHashMap photo = (LinkedHashMap) photoArray.get(0);
                                 if(photo.containsKey("full"))
                                     organizationDTO.setImage((String) photo.get("full"));
@@ -207,22 +209,31 @@ public class PetfinderServiceImpl implements PetfinderService {
     private void savePets(String token){
         try {
             Iterator it = petfinderOrgIdMap.entrySet().iterator();
+            petTypeMap = petService.getAllPetTypes();
             while(it.hasNext()) {
-                Map.Entry<String,Integer> orgIdPair = (Map.Entry) it.next();
+                int page = 1;
+                while (true) {
+                    Map.Entry<String, Integer> orgIdPair = (Map.Entry) it.next();
 
-                URL url = new URL("https://api.petfinder.com/v2/animals?organization=" +orgIdPair.getKey());
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    URL url = new URL("https://api.petfinder.com/v2/animals?organization=" + orgIdPair.getKey() + "&page=" +page);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                conn.setRequestProperty("Authorization", "Bearer " + token);
-                conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Authorization", "Bearer " + token);
+                    conn.setRequestMethod("GET");
 
-                InputStream is = conn.getInputStream();
-                JsonNode petMap = mapper.readTree(is);
+                    InputStream is = conn.getInputStream();
+                    JsonNode petMap = mapper.readTree(is);
 
-                List<PetDTO> petDTOList = parsePetsFromResponse(petMap.get("animals"));
+                    if(page>petMap.get("pagination").get("total_pages").intValue())
+                        break;
 
-                for(PetDTO petDTO : petDTOList){
-                    petService.savePet(petDTO,orgIdPair.getValue());
+                    List<PetDTO> petDTOList = parsePetsFromResponse(petMap.get("animals"));
+
+                    for (PetDTO petDTO : petDTOList) {
+                        petService.savePet(petDTO, orgIdPair.getValue());
+                    }
+                    page++;
+                    is.close();
                 }
             }
         }catch (IOException e){
@@ -241,14 +252,17 @@ public class PetfinderServiceImpl implements PetfinderService {
                 Map.Entry<String,Object> propPair = (Map.Entry) propIt.next();
                 if(propPair.getValue()!=null) {
                     switch (propPair.getKey()) {
+                        case "id":
+                            int petId = (int) propPair.getValue();
+                            petDTO.setPetfinderid((long) petId);
                         case "name":
                             petDTO.setName(propPair.getValue().toString());
                             break;
                         case "breeds":
-                            //object contains primary, secondary, mix etc breeds
+                            petDTO.setBreed(parseBreed(propPair.getValue()));
                             break;
                         case "type":
-                            //map pet type to petCode
+                            petDTO.setTypeCode(parsePetType(propPair.getValue().toString()));
                             break;
                         case "gender":
                             petDTO.setGender(propPair.getValue().toString());
@@ -259,29 +273,85 @@ public class PetfinderServiceImpl implements PetfinderService {
                         case "size":
                             petDTO.setSize(propPair.getValue().toString());
                             break;
-                        case "color":
-                            //object contains primary,sec,tertiary colors
+                        case "colors":
+                            petDTO.setColor(parseColor(propPair.getValue()));
                             break;
                         case "coat":
                             //check for more data
+                            petDTO.setCoat(propPair.getValue().toString());
                             break;
                         case "attributes":
+                            Map<String, Boolean> attMap = mapper.convertValue(propPair.getValue(), Map.class);
+                            Iterator attIt = attMap.entrySet().iterator();
+                            while(attIt.hasNext()){
+                                Map.Entry<String,Boolean> attPair = (Map.Entry) attIt.next();
+                                    switch (attPair.getKey()) {
+                                        case "spayed_neutered":
+                                            petDTO.setIsSpayedNeutered(convertBooleanToString(attPair.getValue()));
+                                            break;
+                                        case "house_trained":
+                                            petDTO.setIsHouseTrained(convertBooleanToString(attPair.getValue()));
+                                            break;
+                                        case "declawed":
+                                            petDTO.setIsDeclawed(convertBooleanToString(attPair.getValue()));
+                                            break;
+                                        case "special_needs":
+                                            petDTO.setIsSpecialNeeds(convertBooleanToString(attPair.getValue()));
+                                            break;
+                                        case "shots_current":
+                                            petDTO.setIsVaccinated(convertBooleanToString(attPair.getValue()));
+                                            break;
+                                        default:
+                                            break;
+
+                                    }
+                            }
                             break;
                         case "environment":
+                            Map<String, Boolean> envMap = mapper.convertValue(propPair.getValue(), Map.class);
+                            Iterator envIt = envMap.entrySet().iterator();
+                            while (envIt.hasNext()){
+                                Map.Entry<String, Boolean> envPair = (Map.Entry<String, Boolean>) envIt.next();
+                                switch (envPair.getKey()){
+                                    case "children":
+                                        petDTO.setIsGoodWithChildren(convertBooleanToString(envPair.getValue()));
+                                        break;
+                                    case "dogs":
+                                        petDTO.setIsGoodWithDogs(convertBooleanToString(envPair.getValue()));
+                                        break;
+                                    case "cats":
+                                        petDTO.setIsGoodWithCats(convertBooleanToString(envPair.getValue()));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
                             break;
                         case "description":
                             petDTO.setBio(propPair.getValue().toString());
                             break;
                         case "photos":
-                            //object of photos of diff zies
+                            List photoArray = (ArrayList) propPair.getValue();
+                            if(!photoArray.isEmpty()){
+                                LinkedHashMap photo = (LinkedHashMap) photoArray.get(0);
+                                if(photo.containsKey("full"))
+                                    petDTO.setImage((String) photo.get("full"));
+                            }
                             break;
                         case "status":
                             if(StringUtils.equals(propPair.getValue().toString(), PawdoptConstantUtil.ADOPTABLE))
                                 petDTO.setIsAdoptable("Y");
-                            //check for more data
                             break;
                         case "tags":
-
+                            List tagList = (ArrayList) propPair.getValue();
+                            if(!tagList.isEmpty()){
+                                StringBuilder tagSb = new StringBuilder();
+                                for(Object tag : tagList){
+                                    tagSb.append(tag.toString()).append(",");
+                                }
+                                tagSb.setLength(tagSb.length()-1);
+                                petDTO.setTags(tagSb.toString());
+                            }
                             break;
                         default:
                             break;
@@ -291,5 +361,48 @@ public class PetfinderServiceImpl implements PetfinderService {
         }
 
         return petDTOList;
+    }
+
+    private String parseBreed(Object breedObj){
+        Map<String, String> breedProps = mapper.convertValue(breedObj, Map.class);
+        if(StringUtils.equals(breedProps.get("unknown"),"true"))
+            return "unknown";
+        StringBuilder breedSb = new StringBuilder();
+        Iterator breedIt = breedProps.entrySet().iterator();
+        while (breedIt.hasNext()) {
+            Map.Entry<String, String> breedPair = (Map.Entry) breedIt.next();
+            if(breedPair.getValue()!=null);
+                breedSb.append(breedPair.getValue()).append(",");
+        }
+        breedSb.setLength(breedSb.length() - 1);
+        return breedSb.toString();
+    }
+
+    private String parseColor(Object colorObj){
+        Map<String, String> colorProps = mapper.convertValue(colorObj, Map.class);
+        StringBuilder colorSb = new StringBuilder();
+        Iterator colorIt = colorProps.entrySet().iterator();
+        while (colorIt.hasNext()) {
+            Map.Entry<String, String> colorPair = (Map.Entry) colorIt.next();
+            if(colorPair.getValue()!=null)
+                colorSb.append(colorPair.getValue()).append(",");
+        }
+        colorSb.setLength(colorSb.length() - 1);
+        return colorSb.toString();
+    }
+
+    private String parsePetType(String type){
+        if(petTypeMap.containsKey(type.toLowerCase()))
+            return petTypeMap.get(type.toLowerCase());
+        return PawdoptConstantUtil.PET_TYPE_OTHER;
+    }
+
+    private String convertBooleanToString(Boolean att){
+        if(att == null)
+            return "D";
+        else if(att)
+            return "Y";
+        else
+            return "N";
     }
 }

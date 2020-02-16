@@ -3,6 +3,7 @@ package com.sbhandare.pawdopt.Service;
 import com.sbhandare.pawdopt.DTO.PageDTO;
 import com.sbhandare.pawdopt.DTO.PaginationDTO;
 import com.sbhandare.pawdopt.DTO.PetDTO;
+import com.sbhandare.pawdopt.DTO.PetTypeDTO;
 import com.sbhandare.pawdopt.Model.*;
 import com.sbhandare.pawdopt.Repository.*;
 import com.sbhandare.pawdopt.Util.PawdoptConstantUtil;
@@ -14,10 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -106,5 +104,16 @@ public class PetServiceImpl implements PetService {
                 return savedPet.getPetid();
         }
         return PawdoptConstantUtil.NO_SUCCESS;
+    }
+
+    @Override
+    public Map<String, String> getAllPetTypes() {
+        List<PetType> allPetTypes = petTypeRepository.findAll();
+        if(!allPetTypes.isEmpty()){
+            return allPetTypes
+                    .stream()
+                    .collect(Collectors.toMap(petType -> petType.getPetTypeDesc().toLowerCase(), PetType::getPetTypeCode));
+        }
+        return Collections.emptyMap();
     }
 }

@@ -14,6 +14,9 @@ public class Pet {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private long petid;
 
+    @Column(name = "petfinderid")
+    private Long petfinderid;
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -88,6 +91,14 @@ public class Pet {
 
     public void setPetid(long petid) {
         this.petid = petid;
+    }
+
+    public Long getPetfinderid() {
+        return petfinderid;
+    }
+
+    public void setPetfinderid(Long petfinderid) {
+        this.petfinderid = petfinderid;
     }
 
     public String getName() {

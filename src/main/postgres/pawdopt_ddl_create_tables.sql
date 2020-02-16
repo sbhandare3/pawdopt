@@ -55,7 +55,8 @@ CREATE TABLE pet(
     declawed VARCHAR (1),
     specialneeds VARCHAR (1),
     tags VARCHAR (255),
-    pettypeid BIGINT REFERENCES pet_type (pettypeid) NOT NULL
+    pettypeid BIGINT REFERENCES pet_type (pettypeid) NOT NULL,
+    petfinderid BIGINT
 );
 
 CREATE TABLE user_like (
