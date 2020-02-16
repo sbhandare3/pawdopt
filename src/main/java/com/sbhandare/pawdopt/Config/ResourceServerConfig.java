@@ -9,6 +9,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    private static final String[] AUTH_WHITELIST = {
+            // -- swagger ui
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
@@ -17,7 +25,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                     .disable()
                     .and()
                 .authorizeRequests()
-
+                    .antMatchers(AUTH_WHITELIST).permitAll()
                     .antMatchers("/user/register").permitAll()
                     .antMatchers("/user").access("hasRole('ROLE_ADMIN')")
                     .antMatchers("/user/").access("hasRole('ROLE_ADMIN')")
