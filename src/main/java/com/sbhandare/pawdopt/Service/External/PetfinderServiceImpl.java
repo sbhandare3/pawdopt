@@ -15,10 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
@@ -48,21 +49,37 @@ public class PetfinderServiceImpl implements PetfinderService {
     }
 
     private String getAccessToken() {
-        String command = "curl -d grant_type=client_credentials&" +
-                "client_id=" + client_id +
-                "&client_secret=" + client_secret+
-                " https://api.petfinder.com/v2/oauth2/token";
-        Process process;
+        URL url = null;
         try {
-            process = Runtime.getRuntime().exec(command);
-            if (process != null) {
-                Map tokenMap = mapper.readValue(process.getInputStream(), Map.class);
-                if(tokenMap.containsKey("access_token"))
-                    return tokenMap.get("access_token").toString();
+            url = new URL("https://api.petfinder.com/v2/oauth2/token");
+            String userCredentials = client_id+":"+client_secret;
+            String urlParameters  = "grant_type=client_credentials";
+            byte[] postData = urlParameters.getBytes( StandardCharsets.UTF_8 );
+            int postDataLength = postData.length;
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setInstanceFollowRedirects(false);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Authorization", "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes())));
+            conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", Integer.toString(postDataLength ));
+            conn.setUseCaches(false);
+            try(DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+                wr.write(postData);
             }
-        } catch (IOException e) {
+
+            InputStream is = conn.getInputStream();
+
+            Map tokenMap = mapper.readValue(is, Map.class);
+            if(tokenMap.containsKey("access_token"))
+                return tokenMap.get("access_token").toString();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         return StringUtils.EMPTY;
     }
 
