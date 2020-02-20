@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PetDTO {
     private long petid;
 
-    private long petfinderid;
+    private Long petfinderid;
 
     private String name;
 
@@ -57,11 +57,11 @@ public class PetDTO {
         this.petid = petid;
     }
 
-    public long getPetfinderid() {
+    public Long getPetfinderid() {
         return petfinderid;
     }
 
-    public void setPetfinderid(long petfinderid) {
+    public void setPetfinderid(Long petfinderid) {
         this.petfinderid = petfinderid;
     }
 
