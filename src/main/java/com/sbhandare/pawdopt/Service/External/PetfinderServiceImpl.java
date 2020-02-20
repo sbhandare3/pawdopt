@@ -44,6 +44,7 @@ public class PetfinderServiceImpl implements PetfinderService {
         if(!StringUtils.isEmpty(token)){
             System.out.println(token);
             saveOrganizations(token);
+            //setOrgIdMapFromDb();
             savePets(token);
         }
     }
@@ -229,8 +230,8 @@ public class PetfinderServiceImpl implements PetfinderService {
             petTypeMap = petService.getAllPetTypes();
             while(it.hasNext()) {
                 int page = 1;
-                while (true) {
-                    Map.Entry<String, Integer> orgIdPair = (Map.Entry) it.next();
+                while (true && it.hasNext()) {
+                    Map.Entry<String, Long> orgIdPair = (Map.Entry) it.next();
 
                     URL url = new URL("https://api.petfinder.com/v2/animals?organization=" + orgIdPair.getKey() + "&page=" +page);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -272,6 +273,7 @@ public class PetfinderServiceImpl implements PetfinderService {
                         case "id":
                             int petId = (int) propPair.getValue();
                             petDTO.setPetfinderid((long) petId);
+                            break;
                         case "name":
                             petDTO.setName(propPair.getValue().toString());
                             break;
@@ -294,7 +296,6 @@ public class PetfinderServiceImpl implements PetfinderService {
                             petDTO.setColor(parseColor(propPair.getValue()));
                             break;
                         case "coat":
-                            //check for more data
                             petDTO.setCoat(propPair.getValue().toString());
                             break;
                         case "attributes":
@@ -375,24 +376,36 @@ public class PetfinderServiceImpl implements PetfinderService {
                     }
                 }
             }
+            petDTOList.add(petDTO);
         }
 
         return petDTOList;
     }
 
     private String parseBreed(Object breedObj){
-        Map<String, String> breedProps = mapper.convertValue(breedObj, Map.class);
-        if(StringUtils.equals(breedProps.get("unknown"),"true"))
-            return "unknown";
+        Map<String, Object> breedProps = mapper.convertValue(breedObj, Map.class);
+        if((boolean) breedProps.get(PawdoptConstantUtil.PET_BREED_UNKNOWN))
+            return PawdoptConstantUtil.PET_BREED_UNKNOWN;
         StringBuilder breedSb = new StringBuilder();
         Iterator breedIt = breedProps.entrySet().iterator();
         while (breedIt.hasNext()) {
-            Map.Entry<String, String> breedPair = (Map.Entry) breedIt.next();
-            if(breedPair.getValue()!=null);
-                breedSb.append(breedPair.getValue()).append(",");
+            Map.Entry<String, Object> breedPair = (Map.Entry) breedIt.next();
+            if(breedPair.getValue()!=null) {
+                if(StringUtils.equals(breedPair.getKey(),PawdoptConstantUtil.PET_BREED_PRIMARY))
+                    breedSb.append(breedPair.getValue().toString()).append(",");
+                else  if(StringUtils.equals(breedPair.getKey(),PawdoptConstantUtil.PET_BREED_SECONDARY)){
+                    breedSb.append(breedPair.getValue().toString()).append(",");
+                }
+                else if(StringUtils.equals(breedPair.getKey(),PawdoptConstantUtil.PET_BREED_MIXED) && (boolean) breedPair.getValue()){
+                    breedSb.append(PawdoptConstantUtil.PET_BREED_MIXED).append(",");
+                }
+            }
         }
-        breedSb.setLength(breedSb.length() - 1);
-        return breedSb.toString();
+        if(breedSb.length()>1) {
+            breedSb.setLength(breedSb.length() - 1);
+            return breedSb.toString();
+        }
+        return null;
     }
 
     private String parseColor(Object colorObj){
@@ -404,8 +417,11 @@ public class PetfinderServiceImpl implements PetfinderService {
             if(colorPair.getValue()!=null)
                 colorSb.append(colorPair.getValue()).append(",");
         }
-        colorSb.setLength(colorSb.length() - 1);
-        return colorSb.toString();
+        if(colorSb.length()>1) {
+            colorSb.setLength(colorSb.length() - 1);
+            return colorSb.toString();
+        }
+        return null;
     }
 
     private String parsePetType(String type){
@@ -416,10 +432,17 @@ public class PetfinderServiceImpl implements PetfinderService {
 
     private String convertBooleanToString(Boolean att){
         if(att == null)
-            return "D";
+            return PawdoptConstantUtil.BOOLEAN_TO_STRING_NULL;
         else if(att)
-            return "Y";
+            return PawdoptConstantUtil.BOOLEAN_TO_STRING_TRUE;
         else
-            return "N";
+            return PawdoptConstantUtil.BOOLEAN_TO_STRING_FALSE;
+    }
+
+    private void setOrgIdMapFromDb(){
+        List<OrganizationDTO> organizationDTOList = organizationService.getAllOrganizations();
+        for(OrganizationDTO organizationDTO : organizationDTOList){
+            petfinderOrgIdMap.put(organizationDTO.getPetfinderCode(), organizationDTO.getOrganizationid());
+        }
     }
 }

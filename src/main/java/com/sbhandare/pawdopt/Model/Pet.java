@@ -15,7 +15,7 @@ public class Pet {
     private long petid;
 
     @Column(name = "petfinderid")
-    private Long petfinderid;
+    private long petfinderid;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -93,11 +93,11 @@ public class Pet {
         this.petid = petid;
     }
 
-    public Long getPetfinderid() {
+    public long getPetfinderid() {
         return petfinderid;
     }
 
-    public void setPetfinderid(Long petfinderid) {
+    public void setPetfinderid(long petfinderid) {
         this.petfinderid = petfinderid;
     }
 

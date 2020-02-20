@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,5 +67,16 @@ public class OrganizationServiceImpl implements OrganizationService {
                 return savedOrg.getOrganizationid();
         }
         return PawdoptConstantUtil.NO_SUCCESS;
+    }
+
+    @Override
+    public List<OrganizationDTO> getAllOrganizations() {
+        Iterable<Organization> organizations = organizationRepository.findAll();
+        List<OrganizationDTO> organizationDTOs = new ArrayList<>();
+        organizations.forEach(organization -> {
+            OrganizationDTO organizationDTO = modelMapper.map(organization,OrganizationDTO.class);
+            organizationDTOs.add(organizationDTO);
+        });
+        return organizationDTOs;
     }
 }
