@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setCurrentPage(userPageList.getNumber());
             paginationDTO.setResultsPerPage(userPageList.getNumberOfElements());
+            paginationDTO.setTotalResults(userPageList.getTotalElements());
 
             PageDTO pageDTO = new PageDTO(userList, paginationDTO);
             return pageDTO;

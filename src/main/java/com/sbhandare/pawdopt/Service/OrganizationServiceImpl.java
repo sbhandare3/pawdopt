@@ -48,6 +48,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setCurrentPage(organizationPageList.getNumber());
             paginationDTO.setResultsPerPage(organizationPageList.getNumberOfElements());
+            paginationDTO.setTotalResults(organizationPageList.getTotalElements());
 
             PageDTO pageDTO = new PageDTO(orgList, paginationDTO);
             return pageDTO;

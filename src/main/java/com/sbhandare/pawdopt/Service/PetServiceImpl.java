@@ -54,6 +54,7 @@ public class PetServiceImpl implements PetService {
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setCurrentPage(petPageList.getNumber());
             paginationDTO.setResultsPerPage(petPageList.getNumberOfElements());
+            paginationDTO.setTotalResults(petPageList.getTotalElements());
 
             PageDTO pageDTO = new PageDTO(petList, paginationDTO);
             return pageDTO;
