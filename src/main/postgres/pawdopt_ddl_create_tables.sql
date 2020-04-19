@@ -73,7 +73,7 @@ CREATE TABLE pet_type (
 
 CREATE TABLE security_user (
     secuid serial PRIMARY KEY,
-    username VARCHAR (20) NOT NULL UNIQUE,
+    username VARCHAR (355) NOT NULL UNIQUE,
     password VARCHAR (100) NOT NULL
 );
 
