@@ -7,6 +7,7 @@ import com.sbhandare.pawdopt.DTO.PetTypeDTO;
 import com.sbhandare.pawdopt.Model.*;
 import com.sbhandare.pawdopt.Repository.*;
 import com.sbhandare.pawdopt.Util.PawdoptConstantUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,22 +42,45 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public PageDTO getAllPets(int page) {
+    public PageDTO getAllPets(int page, Map<String, String> userInfo) {
         Pageable pageWithRecords = PageRequest.of(page, PawdoptConstantUtil.DEFAULT_PAGE_RESULTS, Sort.by(
                 "petid"));
         Page<Pet> petPageList = petRepository.findAll(pageWithRecords);
-        List<PetDTO> petList = null;
+        List<PetDTO> petDTOList = null;
         if (petPageList != null && petPageList.getContent() != null && !petPageList.getContent().isEmpty()) {
-            petList = petPageList.get()
+            petDTOList = petPageList.get()
                     .map(pets -> modelMapper.map(pets, PetDTO.class))
                     .collect(Collectors.toList());
+
+            if(userInfo!=null && !userInfo.isEmpty()) {
+                List<Pet> petList = petPageList.get().collect(Collectors.toList());
+
+                Iterator<Pet> it1 = petList.iterator();
+                Iterator<PetDTO> it2 = petDTOList.iterator();
+                String username = userInfo.get("username");
+
+                while (it1.hasNext() && it2.hasNext()) {
+                    Pet pet = it1.next();
+                    Set<User> likedUserSet = pet.getLikedUsers();
+                    PetDTO petDTO = it2.next();
+
+                   if ((pet.getPetid() == petDTO.getPetid()) && (likedUserSet != null && !likedUserSet.isEmpty())) {
+                        for (User user : likedUserSet) {
+                            if (StringUtils.equals(user.getSecurityUser().getUsername(),username)) {
+                                petDTO.setCurrentUserFav(true);
+                                break;
+                            }
+                        }
+                   }
+                }
+            }
 
             PaginationDTO paginationDTO = new PaginationDTO();
             paginationDTO.setCurrentPage(petPageList.getNumber());
             paginationDTO.setResultsPerPage(petPageList.getNumberOfElements());
             paginationDTO.setTotalResults(petPageList.getTotalElements());
 
-            PageDTO pageDTO = new PageDTO(petList, paginationDTO);
+            PageDTO pageDTO = new PageDTO(petDTOList, paginationDTO);
             return pageDTO;
         }
         return null;

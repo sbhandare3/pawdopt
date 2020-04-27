@@ -49,6 +49,8 @@ public class PetDTO {
 
     private OrganizationDTO organizationDTO;
 
+    private boolean isCurrentUserFav;
+
     public long getPetid() {
         return petid;
     }
@@ -232,5 +234,13 @@ public class PetDTO {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public boolean isCurrentUserFav() {
+        return isCurrentUserFav;
+    }
+
+    public void setCurrentUserFav(boolean currentUserFav) {
+        isCurrentUserFav = currentUserFav;
     }
 }

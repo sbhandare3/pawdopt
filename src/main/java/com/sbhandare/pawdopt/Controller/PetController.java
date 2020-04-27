@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/pet")
@@ -20,7 +21,8 @@ public class PetController {
     private PetService petService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public Object getAllPets(@RequestParam(value = "orgid", required = false) Long orgid,
+    public Object getAllPets(@RequestBody (required = false) Map<String, String> userInfo,
+                             @RequestParam(value = "orgid", required = false) Long orgid,
                              @RequestParam(value = "username", required = false) String username,
                              @RequestParam(value = "type", required = false) String type,
                              @RequestParam(value = "location", required = false) String location,
@@ -39,7 +41,7 @@ public class PetController {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             return allPetsByUser;
         }
-        PageDTO petPageDTO = petService.getAllPets(page);
+        PageDTO petPageDTO = petService.getAllPets(page, userInfo);
         if (petPageDTO == null)
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         return petPageDTO;
