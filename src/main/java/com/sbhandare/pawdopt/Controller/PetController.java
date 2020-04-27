@@ -20,7 +20,7 @@ public class PetController {
     @Autowired
     private PetService petService;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public Object getAllPets(@RequestBody (required = false) Map<String, String> userInfo,
                              @RequestParam(value = "orgid", required = false) Long orgid,
                              @RequestParam(value = "username", required = false) String username,
