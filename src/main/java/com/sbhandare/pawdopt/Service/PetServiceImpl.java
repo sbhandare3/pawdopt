@@ -36,9 +36,18 @@ public class PetServiceImpl implements PetService {
     private PetTypeRepository petTypeRepository;
 
     @Override
-    public PetDTO getPetById(long id) {
+    public PetDTO getPetById(long id, Map<String, String> userInfo) {
         Optional<Pet> optionalPet = petRepository.findById(id);
-        return optionalPet.map(pet -> modelMapper.map(pet, PetDTO.class)).orElse(null);
+        PetDTO petDTO = optionalPet.map(pet -> modelMapper.map(pet, PetDTO.class)).orElse(null);
+        if(petDTO!=null && userInfo!=null && !userInfo.isEmpty()){
+            Set<User> likedUsers = optionalPet.get().getLikedUsers();
+            String username = userInfo.get("username");
+            for(User likedUser : likedUsers){
+                if(StringUtils.equals(likedUser.getSecurityUser().getUsername(),username))
+                    petDTO.setCurrentUserFav(true);
+            }
+        }
+        return petDTO;
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface PetService {
-    PetDTO getPetById(long id);
+    PetDTO getPetById(long id, Map<String, String> userInfo);
     PageDTO getAllPets(int page, Map<String, String> userInfo);
     List<PetDTO> getPetsByUsername(String username);
     List<PetDTO> getPetsByOrgId(long orgid);

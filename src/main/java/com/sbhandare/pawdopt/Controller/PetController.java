@@ -47,9 +47,10 @@ public class PetController {
         return petPageDTO;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Object getPet(@PathVariable(value = "id") long petid) {
-        PetDTO petDTO = petService.getPetById(petid);
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public Object getPet(@RequestBody (required = false) Map<String, String> userInfo,
+                         @PathVariable(value = "id") long petid) {
+        PetDTO petDTO = petService.getPetById(petid,userInfo);
         if (petDTO == null)
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         return petDTO;
