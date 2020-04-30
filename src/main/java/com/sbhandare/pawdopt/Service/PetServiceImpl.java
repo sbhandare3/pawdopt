@@ -90,12 +90,21 @@ public class PetServiceImpl implements PetService {
     public List<PetDTO> getPetsByUsername(String username) {
         SecurityUser securityUser = securityUserRepository.findByUsername(username);
         if (securityUser != null) {
-            Set<Pet> petList = securityUser.getUser().getLikedPets();
-            if (petList != null && !petList.isEmpty())
-                return petList
-                        .stream()
-                        .map(pet -> modelMapper.map(pet, PetDTO.class))
-                        .collect(Collectors.toList());
+            Set<Pet> petSet = securityUser.getUser().getLikedPets();
+            if (petSet != null && !petSet.isEmpty()) {
+                List<PetDTO> petDTOList = petSet
+                                            .stream()
+                                            .map(pet -> modelMapper.map(pet, PetDTO.class))
+                                            .collect(Collectors.toList());
+
+                if(!petDTOList.isEmpty()) {
+                    for (PetDTO petDTO : petDTOList) {
+                        petDTO.setCurrentUserFav(true);
+                    }
+                }
+                return petDTOList;
+            }
+
         }
         return Collections.emptyList();
     }
