@@ -56,7 +56,9 @@ CREATE TABLE pet(
     specialneeds VARCHAR (1),
     tags VARCHAR (255),
     pettypeid BIGINT REFERENCES pet_type (pettypeid) NOT NULL,
-    petfinderid BIGINT
+    petfinderid BIGINT,
+    latitude DECIMAL,
+    longitude DECIMAL
 );
 
 CREATE TABLE user_like (

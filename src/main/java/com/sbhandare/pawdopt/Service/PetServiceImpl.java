@@ -1,9 +1,6 @@
 package com.sbhandare.pawdopt.Service;
 
-import com.sbhandare.pawdopt.DTO.PageDTO;
-import com.sbhandare.pawdopt.DTO.PaginationDTO;
-import com.sbhandare.pawdopt.DTO.PetDTO;
-import com.sbhandare.pawdopt.DTO.PetTypeDTO;
+import com.sbhandare.pawdopt.DTO.*;
 import com.sbhandare.pawdopt.Model.*;
 import com.sbhandare.pawdopt.Repository.*;
 import com.sbhandare.pawdopt.Util.PawdoptConstantUtil;
@@ -96,6 +93,65 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    public PageDTO getPetsByFilter(int page, Map<String, String> userInfo, String type, String location) {
+        Pageable pageWithRecords = PageRequest.of(page, PawdoptConstantUtil.DEFAULT_PAGE_RESULTS, Sort.by(
+                "petid"));
+        Page<Pet> petPageList = null;
+        if(StringUtils.isEmpty(type) && StringUtils.isEmpty(location)) {
+            // both are empty - find all
+            petPageList = petRepository.findAll(pageWithRecords);
+        }
+        else if(!StringUtils.isEmpty(type) && StringUtils.isEmpty(location)) {
+            // only type is passed
+            petPageList = petRepository.findByPetType(type, pageWithRecords);
+        }
+        else if(StringUtils.isEmpty(type) && !StringUtils.isEmpty(location)){
+            // only location is passed
+            petPageList = petRepository.findAll(pageWithRecords);
+        }else{
+            // both are not empty
+        }
+        if (petPageList != null && petPageList.getContent() != null && !petPageList.getContent().isEmpty()) {
+            List<PetDTO> petDTOList = petPageList.get()
+                                    .map(pets -> modelMapper.map(pets, PetDTO.class))
+                                    .collect(Collectors.toList());
+            if(!petDTOList.isEmpty()) {
+                if (userInfo != null && !userInfo.isEmpty()) {
+                    List<Pet> petList = petPageList.get().collect(Collectors.toList());
+
+                    Iterator<Pet> it1 = petList.iterator();
+                    Iterator<PetDTO> it2 = petDTOList.iterator();
+                    String username = userInfo.get("username");
+
+                    while (it1.hasNext() && it2.hasNext()) {
+                        Pet pet = it1.next();
+                        Set<User> likedUserSet = pet.getLikedUsers();
+                        PetDTO petDTO = it2.next();
+
+                        if ((pet.getPetid() == petDTO.getPetid()) && (likedUserSet != null && !likedUserSet.isEmpty())) {
+                            for (User user : likedUserSet) {
+                                if (StringUtils.equals(user.getSecurityUser().getUsername(), username)) {
+                                    petDTO.setCurrentUserFav(true);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                PaginationDTO paginationDTO = new PaginationDTO();
+                paginationDTO.setCurrentPage(petPageList.getNumber());
+                paginationDTO.setResultsPerPage(petPageList.getNumberOfElements());
+                paginationDTO.setTotalResults(petPageList.getTotalElements());
+
+                PageDTO pageDTO = new PageDTO(petDTOList, paginationDTO);
+                return pageDTO;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<PetDTO> getPetsByUsername(String username) {
         SecurityUser securityUser = securityUserRepository.findByUsername(username);
         if (securityUser != null) {
@@ -158,5 +214,20 @@ public class PetServiceImpl implements PetService {
                     .collect(Collectors.toMap(petType -> petType.getPetTypeDesc().toLowerCase(), PetType::getPetTypeCode));
         }
         return Collections.emptyMap();
+    }
+
+    @Override
+    public void saveLatLongForExistingPets() {
+        List<Pet> petList = (List<Pet>) petRepository.findAll();
+        List<PetDTO> petDTOList = petList
+                                .stream()
+                                .map(pet -> modelMapper.map(pet, PetDTO.class))
+                                .collect(Collectors.toList());
+        if(!petDTOList.isEmpty()){
+            for(PetDTO petDTO : petDTOList){
+                AddressDTO addressDTO = petDTO.getOrganizationDTO().getAddressDTO();
+
+            }
+        }
     }
 }

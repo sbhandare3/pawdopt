@@ -3,6 +3,7 @@ package com.sbhandare.pawdopt.Model;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -73,6 +74,12 @@ public class Pet {
 
     @Column(name = "tags")
     private String tags;
+
+    @Column(name = "latitude")
+    private BigDecimal latitude;
+
+    @Column(name = "longitude")
+    private BigDecimal longitude;
 
     @ManyToOne
     @JoinColumn(name = "organizationid", nullable = false)
@@ -275,5 +282,21 @@ public class Pet {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 }

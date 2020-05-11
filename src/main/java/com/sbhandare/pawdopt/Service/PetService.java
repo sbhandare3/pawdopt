@@ -10,8 +10,10 @@ import java.util.Map;
 public interface PetService {
     PetDTO getPetById(long id, Map<String, String> userInfo);
     PageDTO getAllPets(int page, Map<String, String> userInfo);
+    PageDTO getPetsByFilter(int page, Map<String, String> userInfo, String type, String location);
     List<PetDTO> getPetsByUsername(String username);
     List<PetDTO> getPetsByOrgId(long orgid);
     long savePet(PetDTO petDTO, long orgid);
     Map<String, String> getAllPetTypes();
+    void saveLatLongForExistingPets();
 }

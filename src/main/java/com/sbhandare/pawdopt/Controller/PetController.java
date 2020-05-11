@@ -41,7 +41,7 @@ public class PetController {
                 return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
             return allPetsByUser;
         }
-        PageDTO petPageDTO = petService.getAllPets(page, userInfo);
+        PageDTO petPageDTO = petService.getPetsByFilter(page, userInfo, type, location);
         if (petPageDTO == null)
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         return petPageDTO;

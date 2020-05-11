@@ -2,6 +2,8 @@ package com.sbhandare.pawdopt.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
+
 public class PetDTO {
     private long petid;
 
@@ -50,6 +52,10 @@ public class PetDTO {
     private OrganizationDTO organizationDTO;
 
     private boolean isCurrentUserFav;
+
+    private BigDecimal latitude;
+
+    private BigDecimal longitude;
 
     public long getPetid() {
         return petid;
@@ -242,5 +248,21 @@ public class PetDTO {
 
     public void setCurrentUserFav(boolean currentUserFav) {
         isCurrentUserFav = currentUserFav;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 }
