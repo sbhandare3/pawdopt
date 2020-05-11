@@ -15,6 +15,8 @@ public interface PetRepository extends PagingAndSortingRepository<Pet, Long> {
     @Query(value = "select pet.* from pet, pet_type where pet.pettypeid = pet_type.pettypeid and pet_type.type_code = :type", nativeQuery = true)
     Page<Pet> findByPetType(@Param("type") String type, Pageable pageable);
 
+    /*
     @Query(value = "select pet.* from pet, pet_type where pet.pettypeid = pet_type.pettypeid and pet_type.type_code = :type", nativeQuery = true)
     Page<Pet> findByLocation(@Param("dist") String dist, @Param("lat") BigDecimal lat, @Param("lon") BigDecimal lon, Pageable pageable);
+    */
 }
