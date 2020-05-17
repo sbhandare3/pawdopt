@@ -1,10 +1,8 @@
 package com.sbhandare.pawdopt.Service;
 
 import com.sbhandare.pawdopt.DTO.AddressDTO;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import com.sbhandare.pawdopt.Model.GeoPoint;
 
 public interface LocationService {
-    ArrayList<BigDecimal> getLatLongFromAddress(AddressDTO addressDTO);
+    GeoPoint getLatLongFromAddress(AddressDTO addressDTO);
 }

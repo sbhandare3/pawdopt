@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,8 @@ public class PetServiceImpl implements PetService {
     private OrganizationRepository organizationRepository;
     @Autowired
     private PetTypeRepository petTypeRepository;
+    @Autowired
+    private LocationService locationService;
 
     @Override
     public PetDTO getPetById(long id, Map<String, String> userInfo) {
@@ -107,9 +110,20 @@ public class PetServiceImpl implements PetService {
         }
         else if(StringUtils.isEmpty(type) && !StringUtils.isEmpty(location)){
             // only location is passed
-            petPageList = petRepository.findAll(pageWithRecords);
+            String[] latLonDist = location.split(",");
+            petPageList = petRepository.findByLocation(Integer.parseInt(latLonDist[0]),
+                                                        new BigDecimal(latLonDist[1]),
+                                                        new BigDecimal(latLonDist[2]),
+                                                        pageWithRecords);
+
         }else{
             // both are not empty
+            String[] latLonDist = location.split(",");
+            petPageList = petRepository.findByTypeLocation(Integer.parseInt(latLonDist[0]),
+                                                            new BigDecimal(latLonDist[1]),
+                                                            new BigDecimal(latLonDist[2]),
+                                                            type,
+                                                            pageWithRecords);
         }
         if (petPageList != null && petPageList.getContent() != null && !petPageList.getContent().isEmpty()) {
             List<PetDTO> petDTOList = petPageList.get()
@@ -217,7 +231,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public void saveLatLongForExistingPets() {
+    public void updateLatLongForExistingPets() {
         List<Pet> petList = (List<Pet>) petRepository.findAll();
         List<PetDTO> petDTOList = petList
                                 .stream()
@@ -225,8 +239,9 @@ public class PetServiceImpl implements PetService {
                                 .collect(Collectors.toList());
         if(!petDTOList.isEmpty()){
             for(PetDTO petDTO : petDTOList){
-                AddressDTO addressDTO = petDTO.getOrganizationDTO().getAddressDTO();
-
+                GeoPoint point = locationService.getLatLongFromAddress(petDTO.getOrganizationDTO().getAddressDTO());
+                petRepository.updateLatLonForPet(petDTO.getPetid(),point.getLattitude(),point.getLongitude());
+                //System.out.println("updated : "+petDTO.getPetid()+" "+point.getLattitude()+" "+point.getLongitude());
             }
         }
     }

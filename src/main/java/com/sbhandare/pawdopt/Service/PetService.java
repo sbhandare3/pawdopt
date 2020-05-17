@@ -15,5 +15,5 @@ public interface PetService {
     List<PetDTO> getPetsByOrgId(long orgid);
     long savePet(PetDTO petDTO, long orgid);
     Map<String, String> getAllPetTypes();
-    void saveLatLongForExistingPets();
+    void updateLatLongForExistingPets();
 }

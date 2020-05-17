@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,5 +63,13 @@ public class PetController {
         if(petid == PawdoptConstantUtil.NO_SUCCESS)
             return new ResponseEntity<Void>(HttpStatus.SERVICE_UNAVAILABLE);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/updatelatlon", method = RequestMethod.GET)
+    public Object updatePetLatLon(){
+        petService.updateLatLongForExistingPets();
+        Map<String, String> response = new HashMap<>();
+        response.put("Updating Latitute and Longitude", "completed");
+        return response;
     }
 }

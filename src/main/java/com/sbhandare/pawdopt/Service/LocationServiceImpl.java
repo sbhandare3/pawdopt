@@ -1,33 +1,35 @@
 package com.sbhandare.pawdopt.Service;
 
 import com.sbhandare.pawdopt.DTO.AddressDTO;
+import com.sbhandare.pawdopt.Model.GeoPoint;
+import com.sbhandare.pawdopt.Service.External.OpenStreetMapProcessor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-
+@Component
 public class LocationServiceImpl implements LocationService {
     @Override
-    public ArrayList<BigDecimal> getLatLongFromAddress(AddressDTO addressDTO) {
+    public GeoPoint getLatLongFromAddress(AddressDTO addressDTO) {
+        StringBuilder addressStrSb = new StringBuilder();
         /*
-        String addressStr = addressDTO.getStreet1()+", "+addressDTO.getStreet2()+", "+addressDTO.getCity()+", "+addressDTO.getState()+", "+addressDTO.getZipCode();
-        Geocoder coder = new Geocoder(context, Locale.getDefault());
-        List<AddressDTO> addressList;
-        GeoPoint p1 = null;
+        if(!StringUtils.isEmpty(addressDTO.getStreet1()))
+            addressStrSb.append(addressDTO.getStreet1()).append(", ");
+        if(!StringUtils.isEmpty(addressDTO.getStreet2()))
+            addressStrSb.append(addressDTO.getStreet2()).append(", ");
+        */
+        if(!StringUtils.isEmpty(addressDTO.getCity()))
+            addressStrSb.append(addressDTO.getCity()).append(", ");
+        if(!StringUtils.isEmpty(addressDTO.getState()))
+            addressStrSb.append(addressDTO.getState()).append(", ");
+        if(!StringUtils.isEmpty(addressDTO.getZipCode()))
+            addressStrSb.append(addressDTO.getZipCode());
 
+        //String addressStr = addressDTO.getStreet1()+", "+addressDTO.getStreet2()+", "+addressDTO.getCity()+", "+addressDTO.getState()+", "+addressDTO.getZipCode();
         try {
-            addressList = coder.getFromLocationName(addressStr,5);
-            if (addressList==null) {
-                return null;
-            }
-            AddressDTO location = addressList.get(0);
-
-            p1 = new GeoPoint(location.getLatitude(), location.getLongitude());
-
-            return p1;
-        } catch (IOException e) {
+            return OpenStreetMapProcessor.getInstance().getCoordinates(addressStrSb.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        */
         return null;
     }
 }
